@@ -4,6 +4,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
 import Input from './components/Input';
+import { IoMdSend } from 'react-icons/io';
 
 import { initializeApp } from 'firebase/app';
 import { collection, getFirestore, query, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -25,6 +26,10 @@ const firebaseConfig = {
 const appFirebase = initializeApp(firebaseConfig);
 
 const auth = getAuth(appFirebase);
+
+import GlobalStyles from './styles/global';
+import { Container, Content, Header, EditorContent, MessagesContent, MessageItem } from './styles/chat';
+import { format, parseISO } from 'date-fns';
 
 function App() {
   const formRef = useRef<FormHandles>(null);
@@ -60,37 +65,65 @@ function App() {
     }
   }
 
-  console.log(messages)
+  useEffect(() => {
+    var objDiv = document.getElementById("message_content");
+    if (objDiv) {
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+  }, [messages])
 
   return (
-    <div>
-      {user && (
-        <>
-          <p>{user.displayName}</p>
-          <p>{user.email}</p>
-        </>
-      )}
-      {!user ? (
-        <button type='button' onClick={singInGoogle}>logar</button>
-      ) : (
-        <>
-          {messages?.map(message => (
-            <div style={{ display: 'flex', padding: 16, alignItems: 'center' }}>
-              <img src={message.photoURL} alt="userAvatar" style={{ height: 32, width: 32, borderRadius: '50%', marginLeft: 8 }} />
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <p>{message.username}</p>
-                <p>{message.text}</p>
-              </div>
+    <>
+      <GlobalStyles />
+      <Container>
+        <Content>
+
+          <Header>
+            <img src={user?.photoURL || undefined} alt="userAvatar" />
+            <div>
+              <p>{user?.displayName}</p>
+              <p>{user?.email}</p>
             </div>
-          ))}
-          <Form ref={formRef} onSubmit={handleSubmit}>
-            <Input name="text" />
-            <button type="submit">enviar</button>
-          </Form>
-          <button type='button' onClick={() => signOut(auth)}>deslogar</button>
-        </>
-      )}
-    </div>
+          </Header>
+          <MessagesContent id="message_content">
+            {messages?.map(message => (
+              <MessageItem isUserLogged={message.uid === user?.uid}>
+                {message.uid !== user?.uid && <img src={message.photoURL} alt="userAvatar" />}
+                {<div >
+                  {message.uid !== user?.uid ? <p>{message.username}</p> : <p></p>}
+                  <p>{message.text}</p>
+                  {message.created_at?.seconds && <span>
+                    <p>{format(new Date(message.created_at.seconds * 1000), 'HH:mm')}</p>
+                  </span>}
+                </div>}
+
+              </MessageItem>
+            ))}
+          </MessagesContent>
+          <EditorContent>
+            <Form ref={formRef} onSubmit={handleSubmit}>
+              <Input name="text" placeholder="digite aqui" />
+              <div onClick={() => formRef.current?.submitForm()}>
+                <IoMdSend />
+              </div>
+            </Form>
+          </EditorContent>
+          {/* 
+          {!user ? (
+            <button type='button' onClick={singInGoogle}>logar</button>
+          ) : (
+            <>
+
+              <Form ref={formRef} onSubmit={handleSubmit}>
+                <Input name="text" />
+                <button type="submit">enviar</button>
+              </Form>
+              <button type='button' onClick={() => signOut(auth)}>deslogar</button>
+            </>
+          )} */}
+        </Content>
+      </Container>
+    </>
 
   )
 }
