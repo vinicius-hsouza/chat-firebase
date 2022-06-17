@@ -32,7 +32,7 @@ function App() {
 
 
   const messagesCollection = collection(getFirestore(appFirebase), 'messages');
-  const queryMessages = query(messagesCollection);
+  const queryMessages = query(messagesCollection, orderBy('created_at'));
 
   const [messages] = useCollectionData(queryMessages);
 
