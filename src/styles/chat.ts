@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { isMobile } from 'react-device-detect';
 
 export const Container = styled.div`
   background: #202025;
@@ -17,6 +18,10 @@ export const Content = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  ${() => isMobile && css`
+    background: tomato;
+  `}
   
 `;
 
