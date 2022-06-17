@@ -37,6 +37,7 @@ export const Header = styled.div`
   }
 
   > div{
+    flex: 1;
     margin-left: 8px;
 
     >p:nth-of-type(1){
@@ -48,6 +49,16 @@ export const Header = styled.div`
       font-size: 14px;
       font-weight:500;
       color: #aeb4b0;
+    }
+  }
+
+  > span{
+    > div{
+      cursor: pointer;
+      >svg {
+        height: 20px ;
+        width: 20px ;
+      }
     }
   }
 `;

@@ -4,7 +4,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 
 import Input from './components/Input';
-import { IoMdSend } from 'react-icons/io';
+import { IoIosLogOut, IoMdSend } from 'react-icons/io';
 
 import { initializeApp } from 'firebase/app';
 import { collection, getFirestore, query, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -72,18 +72,34 @@ function App() {
     }
   }, [messages])
 
+  if (!user) {
+
+    return (
+      <>
+        <GlobalStyles />
+        <Container>
+          <button type='button' onClick={singInGoogle}>logar</button>
+        </Container>
+      </>
+    )
+  }
+
   return (
     <>
       <GlobalStyles />
       <Container>
         <Content>
-
           <Header>
             <img src={user?.photoURL || undefined} alt="userAvatar" />
             <div>
               <p>{user?.displayName}</p>
               <p>{user?.email}</p>
             </div>
+            <span>
+              <div onClick={() => signOut(auth)}>
+                <IoIosLogOut />
+              </div>
+            </span>
           </Header>
           <MessagesContent id="message_content">
             {messages?.map(message => (
