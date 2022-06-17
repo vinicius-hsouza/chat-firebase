@@ -20,9 +20,9 @@ export const Content = styled.div`
   flex-direction: column;
 
   ${() => isMobile && css`
-    background: tomato;
+    height: 100%;
+    width: 100%;
   `}
-  
 `;
 
 export const Header = styled.div`
