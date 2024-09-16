@@ -36,7 +36,9 @@ export function PiPProvider({ children }: PiPProviderProps) {
         return;
       }
 
-      const pip = await window.documentPictureInPicture.requestWindow({
+      const newWindow: any = window;
+
+      const pip = await newWindow.documentPictureInPicture.requestWindow({
         width,
         height,
       });
